@@ -23,6 +23,96 @@ namespace CrudNet7.Controllers
             return View(await _context.Contacts.ToListAsync());
         }
 
+        [HttpGet]
+        public IActionResult Create() 
+        { 
+            return View();  
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Contact contact)
+        {
+            if(ModelState.IsValid)
+            {
+                _context.Contacts.Add(contact);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));   
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var contac = _context.Contacts.Find(id);
+
+            if(contac is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(contac);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Contacts.Update(contact);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Detail(int id)
+        {
+            var contac = _context.Contacts.Find(id);
+
+            if (contac is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(contac);
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var contac = _context.Contacts.Find(id);
+
+            if (contac is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(contac);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var contact = await _context.Contacts.FindAsync(id);
+
+            if(contact is null)
+            {
+                return View();
+            }
+
+            _context.Contacts.Remove(contact);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index)); 
+        }
+
+
         public IActionResult Privacy()
         {
             return View();
